@@ -57,6 +57,19 @@ $$
 \log p_{\theta}(\tau)=\log p(s_0)+ \sum_{t=0}^T \log \pi_{\theta}(a_t|s_t)+\sum_{t=0}^T \log p(s_{t+1}|s_t,a_t)
 $$
 
+The state transition probabilities $p(s_{t+1}|s_t,a_t)$ are independent of the policy parameters $\theta$ .
 
+Similarly, the initial state probability $p(s_0)$ also does not depend on $\theta$ .
 
-
+Therefore, when taking the gradient with respect to $\theta$ , these terms vanish:
+$$
+\nabla_{\theta}\log p_\theta(\tau)=\sum_{t=0}^T\nabla_\theta\log \pi_{\theta}(a_t|s_t)
+$$
+Here,we derive the **Policy Gradient Theorem**:
+$$
+\nabla_\theta J(\theta)=\mathbb{E}_{\tau\sim\pi_\theta}\Bigl[\Bigl(\sum_{t=0}^{T}\nabla_\theta\log\pi_{\theta}(a_t|s_t)\Bigr)R(\tau)\Bigr]
+$$
+This is an expectation, which means that we can estimate it with a sample mean. If we collect a set of trajectories $\mathcal{D} = \{\tau_i\}_{i=1,...,N}$  where each trajectory is obtained by letting the agent act in the environment using the policy $\pi_{\theta}$, the policy gradient can be estimated with
+$$
+\hat g=\frac{1}{|\mathcal{D}|}\sum_{\tau\in \mathcal{D}}\sum_{t=0}^{T}\nabla_\theta\log\pi_{\theta}(a_t|s_t)R(\tau)
+$$
